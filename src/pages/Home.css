@@ -1,0 +1,5 @@
+/* Home page specific styles */
+.hero {
+    min-height: calc(100vh - 80px);
+    /* Adjust for header */
+}
