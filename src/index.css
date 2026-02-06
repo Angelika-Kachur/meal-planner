@@ -59,3 +59,32 @@ a {
     --bg-offset: #1a1a1a;
   }
 }
+
+/* PDF Export Styles */
+body.is-exporting .remove-meal-btn,
+body.is-exporting .add-meal-btn,
+body.is-exporting .plan-actions,
+body.is-exporting .shopping-sidebar,
+body.is-exporting .checkbox,
+body.is-exporting .empty-list-state,
+body.is-exporting .slot-content.empty {
+  display: none !important;
+}
+
+body.is-exporting .plan-grid-section,
+body.is-exporting .shopping-content {
+  padding: 0 !important;
+  margin: 0 !important;
+  background: white !important;
+}
+
+body.is-exporting .container {
+  max-width: none !important;
+  width: 100% !important;
+  padding: 20px !important;
+}
+
+body.is-exporting * {
+  box-shadow: none !important;
+  transition: none !important;
+}

@@ -2,10 +2,18 @@ import React, { useState } from 'react';
 import './MealPlan.css';
 import { useMeal } from '../context/MealContext';
 import { Link } from 'react-router-dom';
+import { exportToPdf } from '../utils/exportPdf';
 
 const MealPlan: React.FC = () => {
     const { mealPlan, removeMeal } = useMeal();
     const [days, setDays] = useState<3 | 7>(7);
+    const [isExporting, setIsExporting] = useState(false);
+
+    const handleExport = async () => {
+        setIsExporting(true);
+        await exportToPdf('meal-plan-content', `My-${days}Day-Meal-Plan`);
+        setIsExporting(false);
+    };
 
     const mealSlots = ['Breakfast', 'Lunch', 'Dinner'];
     const dayLabels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -52,7 +60,7 @@ const MealPlan: React.FC = () => {
                 </div>
             </section>
 
-            <section className="plan-grid-section">
+            <section id="meal-plan-content" className="plan-grid-section">
                 <div className="container">
                     <div className={`plan-grid days-${days}`}>
                         {displayDays.map((day, index) => {
@@ -110,7 +118,13 @@ const MealPlan: React.FC = () => {
 
                     <div className="plan-actions">
                         <button className="btn-primary">Save Plan</button>
-                        <button className="btn-secondary">Print PDF</button>
+                        <button
+                            className="btn-secondary"
+                            onClick={handleExport}
+                            disabled={isExporting}
+                        >
+                            {isExporting ? 'Generating PDF...' : 'Print PDF'}
+                        </button>
                     </div>
                 </div>
             </section>

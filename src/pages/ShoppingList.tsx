@@ -1,7 +1,9 @@
 import React, { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import './ShoppingList.css';
 import { useMeal } from '../context/MealContext';
 import { convertUnit } from '../utils/units';
+import { exportToPdf } from '../utils/exportPdf';
 
 interface ShoppingItem {
     id: string;
@@ -15,6 +17,13 @@ interface ShoppingItem {
 const ShoppingList: React.FC = () => {
     const { mealPlan, unitSystem } = useMeal();
     const [manualCheckedItems, setManualCheckedItems] = useState<Set<string>>(new Set());
+    const [isExporting, setIsExporting] = useState(false);
+
+    const handleExport = async () => {
+        setIsExporting(true);
+        await exportToPdf('shopping-list-content', 'My-Shopping-List');
+        setIsExporting(false);
+    };
 
     // Derive ingredients from meal plan
     const derivedItems = useMemo(() => {
@@ -98,7 +107,7 @@ const ShoppingList: React.FC = () => {
             <section className="shopping-content">
                 <div className="container">
                     <div className="shopping-grid">
-                        <div className="list-container">
+                        <div id="shopping-list-content" className="list-container">
                             {totalCount === 0 && (
                                 <div className="empty-list-state">
                                     <p>Your shopping list is empty. Head over to Recipes to start planning!</p>
@@ -150,7 +159,13 @@ const ShoppingList: React.FC = () => {
                                         style={{ width: `${progress}%` }}
                                     ></div>
                                 </div>
-                                <button className="btn-primary full-width">Export to PDF</button>
+                                <button
+                                    className="btn-primary full-width"
+                                    onClick={handleExport}
+                                    disabled={isExporting}
+                                >
+                                    {isExporting ? 'Generating PDF...' : 'Export to PDF'}
+                                </button>
                                 <button className="btn-secondary full-width" onClick={() => setManualCheckedItems(new Set())}>
                                     Reset All
                                 </button>
@@ -163,7 +178,6 @@ const ShoppingList: React.FC = () => {
     );
 };
 
-// Add Missing Link import
-import { Link } from 'react-router-dom';
+
 
 export default ShoppingList;
